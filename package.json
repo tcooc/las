@@ -1,6 +1,7 @@
 {
   "name": "my-app",
   "version": "0.1.0",
+  "homepage": "https://tcooc.github.io/las",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.4.1",
