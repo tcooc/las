@@ -158,11 +158,11 @@ export const StatInput = ({
 
 export const CheckboxField = ({
   label,
-  value,
+  checked,
   onChange,
 }: {
   label: string;
-  value?: boolean;
+  checked?: boolean;
   onChange: (value: boolean) => void;
 }) => (
   <EngravingFormControl>
@@ -170,7 +170,7 @@ export const CheckboxField = ({
       control={
         <Checkbox
           size="small"
-          value={!!value}
+          checked={!!checked}
           onChange={(event) => onChange(event.target.checked)}
         />
       }

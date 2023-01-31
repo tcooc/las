@@ -12,8 +12,8 @@ export const Recommendations = observer(
         Needed on accessories: {engravingsToString(store.startingNeeds)}
       </Typography>
       <Typography>
-        Engravings combinations (assumes using owned accessories, start with
-        class, finish with 5/3 then lower):
+        Engravings combinations (* ignore legendary combos * using owned
+        accessories * start with class, finish with 5/3 and lower):
       </Typography>
       {store.recommendations.length ? (
         <List>

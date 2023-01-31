@@ -171,6 +171,9 @@ export class EngravingCalculator {
 
     const minExtra = 2; // prevent overcapping engraving points
     const needsSlots = ACCESSORY_SLOTS - accessories.length;
+    const validCombos = VALID_COMBOS.filter(
+      (combo) => combo.length < 2 || (combo[0] >= 3 && combo[1] >= 3)
+    ); // filter out legendary
     // I'm dumb so just do recursion
     const findCombo = (needsArray: number[], slots: number[][]) => {
       if (slots.length === needsSlots) {
@@ -179,8 +182,8 @@ export class EngravingCalculator {
         }
         return;
       }
-      for (let i = 0; i < VALID_COMBOS.length; i++) {
-        const combo = VALID_COMBOS[i];
+      for (let i = 0; i < validCombos.length; i++) {
+        const combo = validCombos[i];
         if (combo.length === 2) {
           const j = needsArray.findIndex((need) => need > 0);
           if (j > -1) {

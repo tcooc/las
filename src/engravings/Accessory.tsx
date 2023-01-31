@@ -140,7 +140,11 @@ export const Accessory = observer(
           />
         </div>
         <div>
-          <CheckboxField label="Owned" onChange={handleOwnedChange} />
+          <CheckboxField
+            label="Owned"
+            checked={accessory.owned}
+            onChange={handleOwnedChange}
+          />
           <StatInput
             label="Price"
             value={accessory.price}
