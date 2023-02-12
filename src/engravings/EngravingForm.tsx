@@ -1,7 +1,6 @@
 import { Container, Typography, Button, Grid } from "@mui/material";
 import { POINTS_EQUIP, LEVELS, MAX_ENGRAVINGS, POINTS_STONE } from "../data";
 import { observer } from "mobx-react-lite";
-import { useEffect } from "react";
 import { Accessories } from "./Accessories";
 import { EngravingPicker, EngravingPickerType, PointsPicker } from "./fields";
 import { EngravingCalculator, Engraving, getKey } from "../models";
@@ -19,32 +18,6 @@ export const EngravingForm = observer(
       (engraving: Partial<Engraving>) => (value: number) => {
         store.updateEngraving(engraving, { value });
       };
-
-    useEffect(() => {
-      store.load();
-      const saveInterval = setInterval(store.save, 5000);
-      return () => clearInterval(saveInterval);
-    }, [store]);
-
-    useEffect(() => {
-      const handler = (event: KeyboardEvent) => {
-        if (event.ctrlKey) {
-          switch (event.key) {
-            case "c":
-              console.log(btoa(store.saveData));
-              break;
-            case "v":
-              const value = prompt("Paste save data:");
-              if (value) {
-                store.saveData = atob(value);
-              }
-              break;
-          }
-        }
-      };
-      window.addEventListener("keydown", handler);
-      return () => window.removeEventListener("keydown", handler);
-    }, [store]);
 
     return (
       <Container>

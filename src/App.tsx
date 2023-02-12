@@ -16,6 +16,13 @@ export const App = () => {
           MuiFormControl: {
             defaultProps: { variant: "outlined", size: "small" },
           },
+          MuiDialog: {
+            styleOverrides: {
+              paper: {
+                maxWidth: 800,
+              },
+            },
+          },
         },
       }),
     [prefersDarkMode]

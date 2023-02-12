@@ -20,7 +20,8 @@ import {
   sumStats,
 } from "./utils";
 
-const SAVE_KEY = "calculatorSave";
+export const SAVE_KEY = "calculatorSave";
+export const ACCOUNT_STATS_KEY = "accountStats";
 
 const newAccessory = (): PartialAccessory => ({
   stat1: {},
@@ -31,6 +32,7 @@ const newAccessory = (): PartialAccessory => ({
 });
 
 export class EngravingCalculator {
+  // saved to calculator
   goal: Partial<Engraving>[] = [
     { value: 15 },
     { value: 15 },
@@ -46,6 +48,14 @@ export class EngravingCalculator {
 
   accessories: PartialAccessory[] = [newAccessory()];
 
+  // saved to user
+  private _accountStats = {
+    [Stat.Crit]: 0,
+    [Stat.Spec]: 0,
+    [Stat.Swift]: 0,
+  };
+
+  // not saved
   shouldSave = false;
 
   constructor() {
@@ -56,6 +66,15 @@ export class EngravingCalculator {
         this.shouldSave = true;
       }
     );
+    // autorun(() => {
+    //   console.log("Autorunning goal cleanup");
+    //   if (this.goal.length === MAX_ENGRAVINGS) {
+    //     const removeIndex = this.goal.findIndex(({ name, value }) => !name);
+    //     if (removeIndex > -1) {
+    //       this.goal.splice(removeIndex, 1);
+    //     }
+    //   }
+    // });
   }
 
   addGoal = () => {
@@ -404,18 +423,28 @@ export class EngravingCalculator {
     this.accessories = payload.accessories;
   }
 
-  save = () => {
-    if (this.shouldSave) {
+  save = (saveKey?: string, force?: boolean) => {
+    if (this.shouldSave || force) {
       console.log("Save");
-      localStorage.setItem(SAVE_KEY, this.saveData);
+      localStorage.setItem(saveKey || SAVE_KEY, this.saveData);
       this.shouldSave = false;
     }
   };
 
-  load = () => {
-    const data = localStorage.getItem(SAVE_KEY);
-    if (data) {
-      this.saveData = data;
-    }
+  load = (saveKey?: string) => {
+    return localStorage.getItem(saveKey || SAVE_KEY);
+  };
+
+  get accountStats() {
+    return this._accountStats;
+  }
+
+  set accountStats(accountStats: EngravingCalculator["_accountStats"]) {
+    this._accountStats = accountStats;
+    localStorage.setItem(ACCOUNT_STATS_KEY, JSON.stringify(accountStats));
+  }
+
+  loadAccountStats = () => {
+    return localStorage.getItem(ACCOUNT_STATS_KEY);
   };
 }
