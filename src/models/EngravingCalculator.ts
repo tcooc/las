@@ -23,6 +23,16 @@ import {
 export const SAVE_KEY = "calculatorSave";
 export const ACCOUNT_STATS_KEY = "accountStats";
 
+export interface SaveData {
+  goal: EngravingCalculator["goal"];
+  equipped1: EngravingCalculator["equipped1"];
+  equipped2: EngravingCalculator["equipped2"];
+  stone1: EngravingCalculator["stone1"];
+  stone2: EngravingCalculator["stone2"];
+  stone3: EngravingCalculator["stone3"];
+  accessories: EngravingCalculator["accessories"];
+}
+
 const newAccessory = (): PartialAccessory => ({
   stat1: {},
   stat2: {},
@@ -401,7 +411,7 @@ export class EngravingCalculator {
   }
 
   get saveData() {
-    return JSON.stringify({
+    const save: SaveData = {
       goal: this.goal,
       equipped1: this.equipped1,
       equipped2: this.equipped2,
@@ -409,12 +419,13 @@ export class EngravingCalculator {
       stone2: this.stone2,
       stone3: this.stone3,
       accessories: this.accessories,
-    });
+    };
+    return JSON.stringify(save);
   }
 
   set saveData(data: string) {
-    const payload = JSON.parse(data);
-    this.goal = payload.goal;
+    const payload: SaveData = JSON.parse(data);
+    this.goal = payload.goal.filter(({ name }) => name);
     this.equipped1 = payload.equipped1;
     this.equipped2 = payload.equipped2;
     this.stone1 = payload.stone1;

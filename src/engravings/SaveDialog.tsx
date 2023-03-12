@@ -9,8 +9,15 @@ import {
   Typography,
 } from "@mui/material";
 import { observer } from "mobx-react-lite";
-import { ChangeEvent, FunctionComponent, MouseEvent } from "react";
-import { EngravingCalculator, SAVE_KEY } from "../models";
+import {
+  ChangeEvent,
+  FunctionComponent,
+  MouseEvent,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
+import { EngravingCalculator, SaveData, SAVE_KEY } from "../models";
 
 const SAVE_SLOTS = 5;
 
@@ -22,15 +29,30 @@ export interface SaveDialogProps {
 
 export const SaveDialog: FunctionComponent<SaveDialogProps> = observer(
   ({ open, close, store }) => {
-    const loadSlot = (index: number) => store.load(`${SAVE_KEY}-${index}`);
+    const [saveSlots, setSaveSlots] = useState<SaveData[]>([]);
 
-    const saveSlots = [];
-    for (let i = 0; i < SAVE_SLOTS; i++) {
-      const saveData = loadSlot(i);
-      saveSlots.push(saveData ? JSON.parse(saveData) : {});
-    }
+    const loadSlot = useCallback(
+      (index: number) => store.load(`${SAVE_KEY}-${index}`),
+      [store]
+    );
 
-    const onSave = (index: number) => store.save(`${SAVE_KEY}-${index}`, true);
+    const loadSaveSlots = useCallback(() => {
+      const slots = [];
+      for (let i = 0; i < SAVE_SLOTS; i++) {
+        const saveData = loadSlot(i);
+        slots.push(saveData ? JSON.parse(saveData) : {});
+      }
+      setSaveSlots(slots);
+    }, [loadSlot]);
+
+    useEffect(() => {
+      loadSaveSlots();
+    }, [loadSaveSlots]);
+
+    const onSave = (index: number) => {
+      store.save(`${SAVE_KEY}-${index}`, true);
+      loadSaveSlots();
+    };
 
     const onLoad = (index: number) => {
       const saveData = loadSlot(index);
@@ -72,10 +94,12 @@ export const SaveDialog: FunctionComponent<SaveDialogProps> = observer(
                 <Typography>
                   {Object.keys(slot).length
                     ? slot.goal
-                        .reduce((acc: string[], { name }: { name: string }) => {
-                          acc.push(name);
+                        .reduce((acc, { name }) => {
+                          if (name) {
+                            acc.push(name);
+                          }
                           return acc;
-                        }, [])
+                        }, [] as string[])
                         .join(", ")
                     : "(empty)"}
                 </Typography>
