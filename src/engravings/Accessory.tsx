@@ -1,4 +1,4 @@
-import { Typography, Button, Paper } from "@mui/material";
+import { Typography, Button, Paper, Box } from "@mui/material";
 import { POINTS_ACC1, POINTS_ACC2, POINTS_ACC3 } from "../data";
 import {
   Engraving,
@@ -139,7 +139,7 @@ export const Accessory = observer(
             onChange={handleEngravingValueChange(accessory.engraving3)}
           />
         </div>
-        <div>
+        <Box sx={{ display: "flex", alignItems: "center" }}>
           <CheckboxField
             label="Owned"
             checked={accessory.owned}
@@ -151,7 +151,7 @@ export const Accessory = observer(
             onChange={handlePriceChange(accessory)}
           />
           <Button onClick={handleRemove}>Remove</Button>
-        </div>
+        </Box>
       </Paper>
     );
   }

@@ -41,6 +41,8 @@ export const CLASS_ENGRAVINGS = [
   "Esoteric Flurry",
   "Esoteric Skill Enhancement",
   "First Intention",
+  "Full Bloom",
+  "Recurrence",
 ];
 
 export const BATTLE_ENGRAVINGS = [

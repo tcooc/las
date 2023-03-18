@@ -2,6 +2,9 @@ import { makeAutoObservable, reaction } from "mobx";
 import {
   ACCESSORY_SLOTS,
   CURSES,
+  getDerivedCombos,
+  isAncient,
+  isRelic,
   MAX_POINTS_PER_ACCESSORY,
   VALID_COMBOS,
 } from "../data";
@@ -67,6 +70,7 @@ export class EngravingCalculator {
 
   // not saved
   shouldSave = false;
+  includeAncient = false;
 
   constructor() {
     makeAutoObservable(this);
@@ -76,15 +80,6 @@ export class EngravingCalculator {
         this.shouldSave = true;
       }
     );
-    // autorun(() => {
-    //   console.log("Autorunning goal cleanup");
-    //   if (this.goal.length === MAX_ENGRAVINGS) {
-    //     const removeIndex = this.goal.findIndex(({ name, value }) => !name);
-    //     if (removeIndex > -1) {
-    //       this.goal.splice(removeIndex, 1);
-    //     }
-    //   }
-    // });
   }
 
   addGoal = () => {
@@ -200,9 +195,16 @@ export class EngravingCalculator {
 
     const minExtra = 2; // prevent overcapping engraving points
     const needsSlots = ACCESSORY_SLOTS - accessories.length;
-    const validCombos = VALID_COMBOS.filter(
-      (combo) => combo.length < 2 || (combo[0] >= 3 && combo[1] >= 3)
-    ); // filter out legendary
+    // include derived combos and empty to account for all possibilities
+    const validCombos = [
+      ...getDerivedCombos(
+        VALID_COMBOS.filter(
+          (combo) => isRelic(combo) || (this.includeAncient && isAncient(combo))
+        )
+      ),
+      [],
+    ];
+    console.log("validCombos", validCombos);
     // I'm dumb so just do recursion
     const findCombo = (needsArray: number[], slots: number[][]) => {
       if (slots.length === needsSlots) {
