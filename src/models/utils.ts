@@ -36,7 +36,10 @@ export const diffEngravings = (goal: Engraving[], toRemove: Engraving[]) => {
 };
 
 export const engravingsToString = (engravings: Engraving[]) =>
-  engravings.map(({ name, value }) => `${name} = ${value}`).join(", ");
+  engravings
+    .sort((a, b) => (b.name > a.name ? 1 : -1))
+    .map(({ name, value }) => `${name} = ${value}`)
+    .join(", ");
 
 /**
  *

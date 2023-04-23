@@ -14,7 +14,8 @@ export const Accessories = observer(
     return (
       <div>
         <Typography variant="h5" gutterBottom>
-          Accessories {store.builds.length === 0 ? "(No builds found)" : ""}
+          Accessories{" "}
+          {store.builds.length ? `(${store.builds.length} builds found)` : ""}
         </Typography>
         {store.builds.length > 0 && (
           <>
@@ -81,7 +82,13 @@ export const Accessories = observer(
             show={!focusedKeys || focusedKeys.includes(getKey(accessory))}
           />
         ))}
-        <Button onClick={store.addAccessory}>Add</Button>
+        <Button
+          size="small"
+          variant="outlined"
+          onClick={() => store.addAccessory()}
+        >
+          Add
+        </Button>
       </div>
     );
   }

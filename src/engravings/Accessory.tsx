@@ -57,8 +57,8 @@ export const Accessory = observer(
         store.updateStat(stat, { value });
       };
 
-    const handleOwnedChange = (owned: boolean) => {
-      store.updateAccessory(accessory, { owned });
+    const handleEquippedChange = (equipped: boolean) => {
+      store.updateAccessory(accessory, { equipped });
     };
 
     const handleRemove = () => {
@@ -75,7 +75,7 @@ export const Accessory = observer(
       >
         <Typography variant="h6" color={accessory.slot ? "primary" : "error"}>
           Accessory {index + 1}
-          {accessory.slot ? "" : " (invalid)"}
+          {accessory.slot ? "" : " (slot needed for build search)"}
         </Typography>
         <div>
           <SlotPicker
@@ -141,9 +141,9 @@ export const Accessory = observer(
         </div>
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <CheckboxField
-            label="Owned"
-            checked={accessory.owned}
-            onChange={handleOwnedChange}
+            label="Equipped"
+            checked={accessory.equipped}
+            onChange={handleEquippedChange}
           />
           <StatInput
             label="Price"

@@ -1,6 +1,7 @@
 import { makeAutoObservable, reaction } from "mobx";
 import {
   ACCESSORY_SLOTS,
+  CLASS_ENGRAVINGS,
   CURSES,
   getDerivedCombos,
   isAncient,
@@ -86,8 +87,8 @@ export class EngravingCalculator {
     this.goal.push({ value: 5 });
   };
 
-  addAccessory = () => {
-    this.accessories.push(newAccessory());
+  addAccessory = (accessory?: Partial<PartialAccessory>) => {
+    this.accessories.push({ ...newAccessory(), ...accessory });
   };
 
   removeAccessory = (index: number) => {
@@ -99,8 +100,8 @@ export class EngravingCalculator {
     {
       slot,
       price,
-      owned,
-    }: { slot?: string; price?: number | null; owned?: boolean }
+      equipped,
+    }: { slot?: string; price?: number | null; equipped?: boolean }
   ) => {
     if (typeof slot !== "undefined") {
       accessory.slot = slot as AccessorySlot;
@@ -108,8 +109,8 @@ export class EngravingCalculator {
     if (typeof price !== "undefined") {
       accessory.price = price !== null ? price : undefined;
     }
-    if (typeof owned !== "undefined") {
-      accessory.owned = owned;
+    if (typeof equipped !== "undefined") {
+      accessory.equipped = equipped;
     }
   };
 
@@ -138,11 +139,11 @@ export class EngravingCalculator {
   };
 
   get validAccessories() {
-    return this.accessories.filter((accessory) => accessory.slot);
+    return this.accessories.filter(({ slot }) => slot);
   }
 
-  get ownedAccessories() {
-    return this.validAccessories.filter(({ owned }) => owned);
+  get equippedAccessories() {
+    return this.accessories.filter(({ equipped }) => equipped);
   }
 
   get startingSum() {
@@ -166,18 +167,7 @@ export class EngravingCalculator {
   get recommendations() {
     const start = Date.now();
     const startingNeeds = this.startingNeeds;
-    const ownedAccessories = this.ownedAccessories;
-    const accessories = [
-      ...ownedAccessories
-        .filter((accessory) => accessory.slot === AccessorySlot.Necklace)
-        .slice(0, 1),
-      ...ownedAccessories
-        .filter((accessory) => accessory.slot === AccessorySlot.Earring)
-        .slice(0, 2),
-      ...ownedAccessories
-        .filter((accessory) => accessory.slot === AccessorySlot.Ring)
-        .slice(0, 2),
-    ];
+    const accessories = this.equippedAccessories;
     console.log("recommendations worn accessories", accessories);
     const needs = diffEngravings(
       startingNeeds,
@@ -307,6 +297,11 @@ export class EngravingCalculator {
       item = iterator.next();
     }
     recommendedCombos.sort((a, b) => {
+      const aHasClass = a.some(({ name }) => CLASS_ENGRAVINGS.includes(name));
+      const bHasClass = b.some(({ name }) => CLASS_ENGRAVINGS.includes(name));
+      if (aHasClass !== bHasClass) {
+        return (bHasClass ? 1 : 0) - (aHasClass ? 1 : 0);
+      }
       let diff =
         b.reduce((acc, item) => acc + item.value, 0) -
         a.reduce((acc, item) => acc + item.value, 0);

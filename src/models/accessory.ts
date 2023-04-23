@@ -26,7 +26,7 @@ export interface PartialAccessory {
   engraving3: Partial<Engraving>;
 
   price?: number;
-  owned?: boolean;
+  equipped?: boolean;
 }
 
 export interface Accessory extends PartialAccessory {
