@@ -53,6 +53,7 @@ export const BATTLE_ENGRAVINGS = [
   "Barricade",
   "Cursed Doll",
   "Drops of Ether",
+  "Ether Predator",
   "Expert",
   "Grudge",
   "Heavy Armor",

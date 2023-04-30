@@ -71,7 +71,7 @@ export class EngravingCalculator {
 
   // not saved
   shouldSave = false;
-  includeAncient = false;
+  includeAncient = true;
 
   constructor() {
     makeAutoObservable(this);
