@@ -11,6 +11,7 @@ import {
 } from "../data";
 import {
   AccessorySlot,
+  CalculatorCache,
   Engraving,
   isEngraving,
   PartialAccessory,
@@ -72,6 +73,15 @@ export class EngravingCalculator {
   // not saved
   shouldSave = false;
   includeAncient = true;
+
+  recommendationCache = new CalculatorCache<
+    {
+      startingNeeds: Engraving[];
+      accessories: PartialAccessory[];
+      includeAncient: boolean;
+    },
+    Engraving[][]
+  >();
 
   constructor() {
     makeAutoObservable(this);
@@ -165,9 +175,21 @@ export class EngravingCalculator {
 
   // TODO refactor with Engraving instead of number array
   get recommendations() {
-    const start = Date.now();
     const startingNeeds = this.startingNeeds;
     const accessories = this.equippedAccessories;
+    const includeAncient = this.includeAncient;
+
+    const cacheKey = {
+      startingNeeds,
+      accessories,
+      includeAncient,
+    };
+    const cachedResult = this.recommendationCache.get(cacheKey);
+    if (cachedResult) {
+      return cachedResult;
+    }
+    const start = Date.now();
+
     console.log("recommendations worn accessories", accessories);
     const needs = diffEngravings(
       startingNeeds,
@@ -181,7 +203,7 @@ export class EngravingCalculator {
       acc.push(engraving.value);
       return acc;
     }, [] as number[]);
-    const needsPoints = needsArray.reduce((acc, item) => acc + item, 0);
+    const needsPoints = needs.reduce((acc, { value }) => acc + value, 0);
 
     const minExtra = 2; // prevent overcapping engraving points
     const needsSlots = ACCESSORY_SLOTS - accessories.length;
@@ -189,7 +211,7 @@ export class EngravingCalculator {
     const validCombos = [
       ...getDerivedCombos(
         VALID_COMBOS.filter(
-          (combo) => isRelic(combo) || (this.includeAncient && isAncient(combo))
+          (combo) => isRelic(combo) || (includeAncient && isAncient(combo))
         )
       ),
       [],
@@ -328,6 +350,7 @@ export class EngravingCalculator {
     });
     console.log("recommendations recommendedCombos", recommendedCombos);
     console.log("recommendations took", Date.now() - start, "ms");
+    this.recommendationCache.put(cacheKey, recommendedCombos);
     return recommendedCombos;
   }
 

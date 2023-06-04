@@ -43,6 +43,8 @@ export const CLASS_ENGRAVINGS = [
   "First Intention",
   "Full Bloom",
   "Recurrence",
+  "Predator",
+  "Punisher",
 ];
 
 export const BATTLE_ENGRAVINGS = [
