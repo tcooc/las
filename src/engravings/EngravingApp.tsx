@@ -6,6 +6,18 @@ import { EngravingMenu } from "./EngravingMenu";
 const store = new EngravingCalculator();
 (window as any).store = store; // debug
 
+const createWorker = () => {
+  const worker = new Worker(
+    /* webpackChunkName: "worker" */ new URL("../worker.ts", import.meta.url)
+  );
+  return worker;
+};
+
+const numWorkers = navigator.hardwareConcurrency || 1;
+for (let i = 0; i < numWorkers; i++) {
+  store.registerWorker(createWorker());
+}
+
 export const EngravingApp = () => {
   useEffect(() => {
     const saveData = store.load();

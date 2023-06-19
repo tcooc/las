@@ -9,7 +9,6 @@ import {
 import { observer } from "mobx-react-lite";
 import { ChangeEvent, useState } from "react";
 import { EngravingCalculator, Stat } from "../models";
-import { CheckboxField } from "./fields";
 import { SaveDialog } from "./SaveDialog";
 
 export const EngravingMenu = observer(
@@ -76,13 +75,6 @@ export const EngravingMenu = observer(
                 type="number"
                 value={store.accountStats[Stat.Swift]}
                 onChange={handleAccountStatChange(Stat.Swift)}
-              />
-            </FormControl>
-            <FormControl>
-              <CheckboxField
-                label="Include Ancient"
-                checked={store.includeAncient}
-                onChange={(value) => (store.includeAncient = value)}
               />
             </FormControl>
           </DialogContent>

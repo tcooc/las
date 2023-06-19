@@ -21,11 +21,13 @@ export class CalculatorCache<KeyType, ValueType> {
   cache: CacheValue<KeyType, ValueType>[] = [];
 
   get(key: KeyType) {
-    return this.cache.find((cached) => equals(cached.key, key))?.value;
+    return this.cache.find((cached) => this.equals(cached.key, key))?.value;
   }
 
   // The cache assumes that every key only has one value which is added max. once
   put(key: KeyType, value: ValueType) {
     this.cache.push({ key, value });
   }
+
+  equals = equals;
 }

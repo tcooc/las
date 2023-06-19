@@ -51,52 +51,56 @@ export const Recommendations = observer(
         ).length > 2) && (
         <Typography color="error">Too many accessories equipped</Typography>
       )}
-      {store.recommendations.length ? (
-        <List>
-          {store.recommendations.map((combo) => {
-            const isClass = combo.some(({ name }) =>
-              CLASS_ENGRAVINGS.includes(name)
-            );
-            const text = combo
-              .reduce((acc, engraving) => {
-                acc.push(`${engraving.name} ${engraving.value}`);
-                return acc;
-              }, [] as string[])
-              .join(" / ");
-            const buildAccessory = () => {
-              const accessory: Parameters<typeof store.addAccessory>[0] = {
-                equipped: true,
+      {store.recommendationsRequest.result ? (
+        store.recommendationsRequest.result.length ? (
+          <List>
+            {store.recommendationsRequest.result.map((combo) => {
+              const isClass = combo.some(({ name }) =>
+                CLASS_ENGRAVINGS.includes(name)
+              );
+              const text = combo
+                .reduce((acc, engraving) => {
+                  acc.push(`${engraving.name} ${engraving.value}`);
+                  return acc;
+                }, [] as string[])
+                .join(" / ");
+              const buildAccessory = () => {
+                const accessory: Parameters<typeof store.addAccessory>[0] = {
+                  equipped: true,
+                };
+                if (combo.length >= 1) {
+                  accessory.engraving1 = combo[0];
+                }
+                if (combo.length >= 2) {
+                  accessory.engraving2 = combo[1];
+                }
+                return accessory;
               };
-              if (combo.length >= 1) {
-                accessory.engraving1 = combo[0];
-              }
-              if (combo.length >= 2) {
-                accessory.engraving2 = combo[1];
-              }
-              return accessory;
-            };
-            return (
-              <ListItem
-                key={text}
-                sx={{ color: isClass ? "primary.main" : undefined }}
-              >
-                <Typography>{text}</Typography>
-                <Button
-                  variant="outlined"
-                  size="small"
-                  sx={{
-                    marginLeft: 1,
-                  }}
-                  onClick={() => store.addAccessory(buildAccessory())}
+              return (
+                <ListItem
+                  key={text}
+                  sx={{ color: isClass ? "primary.main" : undefined }}
                 >
-                  Add
-                </Button>
-              </ListItem>
-            );
-          })}
-        </List>
+                  <Typography>{text}</Typography>
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    sx={{
+                      marginLeft: 1,
+                    }}
+                    onClick={() => store.addAccessory(buildAccessory())}
+                  >
+                    Add
+                  </Button>
+                </ListItem>
+              );
+            })}
+          </List>
+        ) : (
+          <Typography>(None)</Typography>
+        )
       ) : (
-        <Typography>(Empty)</Typography>
+        <Typography>Calculating...</Typography>
       )}
     </div>
   )

@@ -1,7 +1,12 @@
-import { Typography, Button, Grid } from "@mui/material";
+import { Typography, Button, Grid, FormControl } from "@mui/material";
 import { POINTS_EQUIP, LEVELS, MAX_ENGRAVINGS, POINTS_STONE } from "../data";
 import { observer } from "mobx-react-lite";
-import { EngravingPicker, EngravingPickerType, PointsPicker } from "./fields";
+import {
+  CheckboxField,
+  EngravingPicker,
+  EngravingPickerType,
+  PointsPicker,
+} from "./fields";
 import { EngravingCalculator, Engraving, getKey } from "../models";
 
 export const Setup = observer(({ store }: { store: EngravingCalculator }) => {
@@ -105,6 +110,27 @@ export const Setup = observer(({ store }: { store: EngravingCalculator }) => {
             value={store.stone3.value}
             onChange={handleEngravingValueChange(store.stone3)}
           />
+        </div>
+        <FormControl>
+          <CheckboxField
+            label="Include Ancient"
+            checked={store.includeAncient}
+            onChange={(value) => (store.includeAncient = value)}
+          />
+        </FormControl>
+        <div>
+          <Button onClick={store.calculatePossibleStones}>
+            Find Possible Stones
+          </Button>
+          {store.possibleStonesRequest && (
+            <pre>
+              {"Stones (or better): "}
+              {store.possibleStonesRequest.stones
+                .map(([s0, s1]) => `${s0}/${s1}`)
+                .join(", ")}
+              {!store.possibleStonesRequest?.done && " > Calculating..."}
+            </pre>
+          )}
         </div>
       </Grid>
     </Grid>

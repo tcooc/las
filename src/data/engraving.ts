@@ -81,7 +81,8 @@ export const CURSES = [
 
 export const ENGRAVINGS = [...BATTLE_ENGRAVINGS, ...CLASS_ENGRAVINGS];
 
-export const MAX_ENGRAVINGS = 6;
+export const MAX_ENGRAVINGS = 7;
+export const MAX_POINTS_STONE = 10;
 export const LEVELS = [5, 10, 15];
 export const POINTS_EQUIP = [3, 6, 9, 12];
 export const POINTS_STONE = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
