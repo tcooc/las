@@ -124,11 +124,12 @@ export const Setup = observer(({ store }: { store: EngravingCalculator }) => {
           </Button>
           {store.possibleStonesRequest && (
             <pre>
-              {"Stones (or better): "}
+              {"Combinations (or better): "}
               {store.possibleStonesRequest.stones
                 .map(([s0, s1]) => `${s0}/${s1}`)
                 .join(", ")}
-              {!store.possibleStonesRequest?.done && " > Calculating..."}
+              {!store.possibleStonesRequest?.done &&
+                " > Calculating... (this may take a while)"}
             </pre>
           )}
         </div>
