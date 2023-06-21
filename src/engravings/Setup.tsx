@@ -119,19 +119,12 @@ export const Setup = observer(({ store }: { store: EngravingCalculator }) => {
           />
         </FormControl>
         <div>
-          <Button onClick={store.calculatePossibleStones}>
-            Find Possible Stones
-          </Button>
-          {store.possibleStonesRequest && (
-            <pre>
-              {"Combinations (or better): "}
-              {store.possibleStonesRequest.stones
-                .map(([s0, s1]) => `${s0}/${s1}`)
-                .join(", ")}
-              {!store.possibleStonesRequest?.done &&
-                " > Calculating... (this may take a while)"}
-            </pre>
-          )}
+          <pre>
+            {"Minimuim stones: "}
+            {store.possibleStones.length
+              ? store.possibleStones.map(([s0, s1]) => `${s0}/${s1}`).join(", ")
+              : "(None)"}
+          </pre>
         </div>
       </Grid>
     </Grid>

@@ -23,6 +23,7 @@ export const isAncient = (combo: number[]) => {
   return combo[0] >= 4 && combo[0] <= 6 && combo[1] === 3;
 };
 
+// calculates all possible useful combos based on accessory, eg. [[1, 6], [1, 5]] -> [[1, 6], [1, 5], [1], [6], [5]]
 export const getDerivedCombos = (combos: number[][]) => {
   const derived: number[] = [];
   combos.forEach((combo) => {

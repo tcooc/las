@@ -1,4 +1,3 @@
-import { observable } from "mobx";
 import {
   ACCESSORY_SLOTS,
   getDerivedCombos,
@@ -29,109 +28,32 @@ export const getPossibleStones = (
   stone2: Partial<Engraving>,
   includeAncient: boolean
 ) => {
-  if (!workers.length) {
-    throw new Error("No available workers");
-  }
   const start = Date.now();
+  const stones: number[][] = [];
 
-  const finalResult: {
-    stones: number[][];
-    done: boolean;
-  } = observable({
-    stones: [],
-    done: false,
-  });
-
-  interface Request {
-    requestId: string;
-    requestStone: number[];
-    result?: boolean;
-  }
-  const requests: Request[] = [];
   for (let i = 0; i <= MAX_POINTS_STONE; i++) {
     for (let j = 0; j <= MAX_POINTS_STONE; j++) {
-      requests.push({
-        requestId: `${Math.random()}`,
-        requestStone: [i, j],
-      });
-    }
-  }
-  let requestIndex = 0;
-
-  const checkDone = () => {
-    if (requests.every((request) => typeof request.result === "boolean")) {
-      console.log("getPossibleStones took", Date.now() - start, "ms");
-      finalResult.done = true;
-    }
-  };
-
-  const addJob = (worker: Worker, { requestId, requestStone }: Request) => {
-    const args: Parameters<typeof getPossibleStone> = [
-      goal,
-      equipped1,
-      equipped2,
-      { name: stone1.name, value: requestStone[0] },
-      { name: stone2.name, value: requestStone[1] },
-      includeAncient,
-    ];
-    worker.postMessage(
-      JSON.stringify({
-        requestId,
-        method: "getPossibleStone",
-        args,
-      })
-    );
-  };
-
-  const handleMessage = (message: MessageEvent) => {
-    const { requestId, result } = JSON.parse(message.data);
-    const request = requests.find((request) => request.requestId === requestId);
-    if (request) {
-      message.stopPropagation();
-      console.log("getPossibleStones.onmessage", requestId, result);
-      request.result = result;
       // if a stone is viable, a strictly better stone is also viable so it can be ignored
+      if (stones.some(([si, sj]) => si <= i && sj <= j)) {
+        continue;
+      }
       if (
-        result &&
-        !finalResult.stones.some(
-          ([si, sj]) =>
-            si <= request.requestStone[0] && sj <= request.requestStone[1]
+        getPossibleStone(
+          goal,
+          equipped1,
+          equipped2,
+          { name: stone1.name, value: i },
+          { name: stone2.name, value: j },
+          includeAncient
         )
       ) {
-        finalResult.stones.push(request.requestStone);
-        console.log("stones", finalResult.stones);
-      }
-      while (requestIndex < requests.length) {
-        const nextRequest = requests[requestIndex];
-        // if a stone is viable, a strictly better stone is also viable so it can be ignored
-        if (
-          finalResult.stones.some(
-            ([si, sj]) =>
-              si <= nextRequest.requestStone[0] &&
-              sj <= nextRequest.requestStone[1]
-          )
-        ) {
-          nextRequest.result = true;
-        } else {
-          addJob(message.target as Worker, nextRequest);
-        }
-        requestIndex++;
-      }
-      if (requestIndex >= requests.length) {
-        checkDone();
+        stones.push([i, j]);
       }
     }
-  };
-
-  workers.forEach((worker) => {
-    worker.addEventListener("message", handleMessage);
-  });
-
-  for (let i = 0; i < workers.length && requestIndex < requests.length; i++) {
-    addJob(workers[i], requests[requestIndex]);
   }
 
-  return finalResult;
+  console.log("getPossibleStones took", Date.now() - start, "ms");
+  return stones;
 };
 
 export const getPossibleStone = (
@@ -186,6 +108,7 @@ export const getRecommendations = (
 };
 
 // TODO refactor with Engraving instead of number array
+// if firstOnly, it does a greedy return first search with maxed accessories, to check if it's even possible
 export const getRecommendationsBase = (
   startingNeeds: Engraving[],
   accessories: PartialAccessory[],
@@ -206,17 +129,19 @@ export const getRecommendationsBase = (
   }, [] as number[]);
   const needsPoints = needs.reduce((acc, { value }) => acc + value, 0);
 
-  const minExtra = 2; // prevent overcapping engraving points
+  const minExtra = firstOnly ? Number.MAX_SAFE_INTEGER : 2; // prevent overcapping engraving points
   const needsSlots = ACCESSORY_SLOTS - accessories.length;
   // include derived combos and empty to account for all possibilities
-  const validCombos = [
-    ...getDerivedCombos(
-      VALID_COMBOS.filter(
-        (combo) => isRelic(combo) || (includeAncient && isAncient(combo))
-      )
-    ),
-    [],
-  ];
+  const validCombos = firstOnly
+    ? [VALID_COMBOS[0]]
+    : [
+        ...getDerivedCombos(
+          VALID_COMBOS.filter(
+            (combo) => isRelic(combo) || (includeAncient && isAncient(combo))
+          )
+        ),
+        [],
+      ];
 
   // I'm dumb so just do recursion
   const findCombo = (needsArray: number[], slots: number[][]) => {
@@ -231,50 +156,57 @@ export const getRecommendationsBase = (
     }
     for (let i = 0; i < validCombos.length; i++) {
       const combo = validCombos[i];
-      if (combo.length === 2) {
-        const j = needsArray.findIndex((need) => need > 0);
-        if (j > -1) {
-          for (let k = j + 1; k < needsArray.length; k++) {
-            if (
-              (needsArray[j] >= combo[0] || needsArray[j] <= minExtra) &&
-              (needsArray[k] >= combo[1] || needsArray[k] <= minExtra)
-            ) {
-              const newNeedsArray = [...needsArray];
-              const newSlot = new Array(needsArray.length);
-              newNeedsArray[j] = newNeedsArray[j] - combo[0];
-              newNeedsArray[k] = newNeedsArray[k] - combo[1];
-              newSlot[j] = combo[0];
-              newSlot[k] = combo[1];
-              findCombo(newNeedsArray, [...slots, newSlot]);
-            }
-            if (
-              (needsArray[j] >= combo[1] || needsArray[j] <= minExtra) &&
-              (needsArray[k] >= combo[0] || needsArray[k] <= minExtra)
-            ) {
-              const newNeedsArray = [...needsArray];
-              const newSlot = new Array(needsArray.length);
-              newNeedsArray[j] = newNeedsArray[j] - combo[1];
-              newNeedsArray[k] = newNeedsArray[k] - combo[0];
-              newSlot[j] = combo[1];
-              newSlot[k] = combo[0];
-              findCombo(newNeedsArray, [...slots, newSlot]);
+      switch (combo.length) {
+        case 2: {
+          const j = needsArray.findIndex((need) => need > 0);
+          if (j > -1) {
+            for (let k = j + 1; k < needsArray.length; k++) {
+              if (
+                (needsArray[j] >= combo[0] || needsArray[j] <= minExtra) &&
+                (needsArray[k] >= combo[1] || needsArray[k] <= minExtra)
+              ) {
+                const newNeedsArray = [...needsArray];
+                const newSlot = new Array(needsArray.length);
+                newNeedsArray[j] = newNeedsArray[j] - combo[0];
+                newNeedsArray[k] = newNeedsArray[k] - combo[1];
+                newSlot[j] = combo[0];
+                newSlot[k] = combo[1];
+                findCombo(newNeedsArray, [...slots, newSlot]);
+              }
+              if (
+                (needsArray[j] >= combo[1] || needsArray[j] <= minExtra) &&
+                (needsArray[k] >= combo[0] || needsArray[k] <= minExtra)
+              ) {
+                const newNeedsArray = [...needsArray];
+                const newSlot = new Array(needsArray.length);
+                newNeedsArray[j] = newNeedsArray[j] - combo[1];
+                newNeedsArray[k] = newNeedsArray[k] - combo[0];
+                newSlot[j] = combo[1];
+                newSlot[k] = combo[0];
+                findCombo(newNeedsArray, [...slots, newSlot]);
+              }
             }
           }
+          break;
         }
-      } else if (combo.length === 1) {
-        const j = needsArray.findIndex((need) => need > 0);
-        if (
-          j > -1 &&
-          (needsArray[j] >= combo[0] || needsArray[j] <= minExtra)
-        ) {
-          const newNeedsArray = [...needsArray];
-          const newSlot = new Array(needsArray.length);
-          newNeedsArray[j] = newNeedsArray[j] - combo[0];
-          newSlot[j] = combo[0];
-          findCombo(newNeedsArray, [...slots, newSlot]);
+        case 1: {
+          const j = needsArray.findIndex((need) => need > 0);
+          if (
+            j > -1 &&
+            (needsArray[j] >= combo[0] || needsArray[j] <= minExtra)
+          ) {
+            const newNeedsArray = [...needsArray];
+            const newSlot = new Array(needsArray.length);
+            newNeedsArray[j] = newNeedsArray[j] - combo[0];
+            newSlot[j] = combo[0];
+            findCombo(newNeedsArray, [...slots, newSlot]);
+          }
+          break;
         }
-      } else {
-        findCombo(needsArray, [...slots, []]);
+        case 0: {
+          findCombo(needsArray, [...slots, []]);
+          break;
+        }
       }
     }
   };

@@ -1,8 +1,8 @@
 /* eslint-disable no-restricted-globals */
-import { getPossibleStone, getRecommendationsBase } from "./models/helpers";
+import { getPossibleStones, getRecommendationsBase } from "./models/helpers";
 
 const METHOD_MAP: Record<string, Function> = {
-  getPossibleStone: getPossibleStone,
+  getPossibleStones: getPossibleStones,
   getRecommendationsBase: getRecommendationsBase,
 };
 

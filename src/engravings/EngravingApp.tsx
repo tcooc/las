@@ -13,10 +13,7 @@ const createWorker = () => {
   return worker;
 };
 
-const numWorkers = navigator.hardwareConcurrency || 1;
-for (let i = 0; i < numWorkers; i++) {
-  store.registerWorker(createWorker());
-}
+store.registerWorker(createWorker());
 
 export const EngravingApp = () => {
   useEffect(() => {

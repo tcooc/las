@@ -76,12 +76,6 @@ export class EngravingCalculator {
     cacheKey: any; // todo type
     result: Engraving[][];
   }> = {};
-  possibleStonesRequest:
-    | {
-        stones: number[][];
-        done: boolean;
-      }
-    | undefined;
 
   constructor(observable: boolean = true) {
     if (observable) {
@@ -201,8 +195,8 @@ export class EngravingCalculator {
     return diffEngravings(goal, this.startingSum);
   }
 
-  calculatePossibleStones = () => {
-    this.possibleStonesRequest = getPossibleStones(
+  get possibleStones() {
+    return getPossibleStones(
       this.workers,
       this.goal,
       this.equipped1,
@@ -211,7 +205,7 @@ export class EngravingCalculator {
       this.stone2,
       this.includeAncient
     );
-  };
+  }
 
   get builds() {
     return getBuilds(
