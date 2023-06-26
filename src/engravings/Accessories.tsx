@@ -1,4 +1,4 @@
-import { Typography, Button, List, Grid, ListItem } from "@mui/material";
+import { Typography, Button, List, Grid, ListItem, Box } from "@mui/material";
 import { EngravingCalculator, engravingsToString, getKey } from "../models";
 import { observer } from "mobx-react-lite";
 import { useState } from "react";
@@ -82,13 +82,20 @@ export const Accessories = observer(
             show={!focusedKeys || focusedKeys.includes(getKey(accessory))}
           />
         ))}
-        <Button
-          size="small"
-          variant="outlined"
-          onClick={() => store.addAccessory()}
+        <Box
+          sx={{
+            marginTop: 1,
+            marginBottom: 1,
+          }}
         >
-          Add
-        </Button>
+          <Button
+            size="small"
+            variant="outlined"
+            onClick={() => store.addAccessory()}
+          >
+            Add
+          </Button>
+        </Box>
       </div>
     );
   }

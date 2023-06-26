@@ -1,4 +1,4 @@
-import { Typography, Button, Paper, Box } from "@mui/material";
+import { Typography, Button, Paper, Grid } from "@mui/material";
 import { POINTS_ACC1, POINTS_ACC2, POINTS_ACC3 } from "../data";
 import {
   Engraving,
@@ -68,8 +68,7 @@ export const Accessory = observer(
     return (
       <Paper
         sx={{
-          marginTop: 1,
-          marginBottom: 1,
+          padding: 1,
           display: show ? undefined : "none",
         }}
       >
@@ -77,81 +76,132 @@ export const Accessory = observer(
           Accessory {index + 1}
           {accessory.slot ? "" : " (slot needed for build search)"}
         </Typography>
-        <div>
-          <SlotPicker
-            value={accessory.slot}
-            onChange={handleSlotChange(accessory)}
-          />
-          <StatPicker
-            label="Combat Stat 1"
-            value={accessory.stat1.name}
-            onChange={handleStatChange(accessory.stat1)}
-          />
-          <StatInput
-            label="Stat"
-            value={accessory.stat1.value}
-            onChange={handleStatValueChange(accessory.stat1)}
-          />
-          <StatPicker
-            label="Combat Stat 2"
-            value={accessory.stat2.name}
-            onChange={handleStatChange(accessory.stat2)}
-          />
-          <StatInput
-            label="Stat"
-            value={accessory.stat2.value}
-            onChange={handleStatValueChange(accessory.stat2)}
-          />
-        </div>
-        <div>
-          <EngravingPicker
-            label={"Engraving 1"}
-            value={accessory.engraving1.name}
-            onChange={handleEngravingChange(accessory.engraving1)}
-          />
-          <PointsPicker
-            label="Points"
-            options={POINTS_ACC1}
-            value={accessory.engraving1.value}
-            onChange={handleEngravingValueChange(accessory.engraving1)}
-          />
-          <EngravingPicker
-            label={"Engraving 2"}
-            value={accessory.engraving2.name}
-            onChange={handleEngravingChange(accessory.engraving2)}
-          />
-          <PointsPicker
-            label="Points"
-            options={POINTS_ACC2}
-            value={accessory.engraving2.value}
-            onChange={handleEngravingValueChange(accessory.engraving2)}
-          />
-          <EngravingPicker
-            type={EngravingPickerType.Curse}
-            label={"Curse"}
-            value={accessory.engraving3.name}
-            onChange={handleEngravingChange(accessory.engraving3)}
-          />
-          <PointsPicker
-            label="Points"
-            options={POINTS_ACC3}
-            value={accessory.engraving3.value}
-            onChange={handleEngravingValueChange(accessory.engraving3)}
-          />
-        </div>
-        <Box sx={{ display: "flex", alignItems: "center" }}>
-          <CheckboxField
-            label="Equipped"
-            checked={accessory.equipped}
-            onChange={handleEquippedChange}
-          />
-          <StatInput
-            label="Price"
-            value={accessory.price}
-            onChange={handlePriceChange(accessory)}
-          />
-          <Button onClick={handleRemove}>Remove</Button>
-        </Box>
+        <Grid container>
+          <Grid item container xs={12}>
+            <Grid item xs={12} md={2} sx={{ display: "flex" }}>
+              <SlotPicker
+                value={accessory.slot}
+                onChange={handleSlotChange(accessory)}
+              />
+            </Grid>
+            <Grid
+              item
+              xs={12}
+              md={5}
+              sx={{
+                display: "flex",
+              }}
+            >
+              <StatPicker
+                label="Combat Stat 1"
+                value={accessory.stat1.name}
+                onChange={handleStatChange(accessory.stat1)}
+              />
+              <StatInput
+                label="Stat"
+                value={accessory.stat1.value}
+                onChange={handleStatValueChange(accessory.stat1)}
+              />
+            </Grid>
+            <Grid
+              item
+              xs={12}
+              md={5}
+              sx={{
+                display: "flex",
+              }}
+            >
+              <StatPicker
+                label="Combat Stat 2"
+                value={accessory.stat2.name}
+                onChange={handleStatChange(accessory.stat2)}
+              />
+              <StatInput
+                label="Stat"
+                value={accessory.stat2.value}
+                onChange={handleStatValueChange(accessory.stat2)}
+              />
+            </Grid>
+          </Grid>
+          <Grid item container xs={12}>
+            <Grid
+              item
+              xs={12}
+              md={4}
+              sx={{
+                display: "flex",
+              }}
+            >
+              <EngravingPicker
+                label={"Engraving 1"}
+                value={accessory.engraving1.name}
+                onChange={handleEngravingChange(accessory.engraving1)}
+              />
+              <PointsPicker
+                label="Points"
+                options={POINTS_ACC1}
+                value={accessory.engraving1.value}
+                onChange={handleEngravingValueChange(accessory.engraving1)}
+              />
+            </Grid>
+            <Grid
+              item
+              xs={12}
+              md={4}
+              sx={{
+                display: "flex",
+              }}
+            >
+              <EngravingPicker
+                label={"Engraving 2"}
+                value={accessory.engraving2.name}
+                onChange={handleEngravingChange(accessory.engraving2)}
+              />
+              <PointsPicker
+                label="Points"
+                options={POINTS_ACC2}
+                value={accessory.engraving2.value}
+                onChange={handleEngravingValueChange(accessory.engraving2)}
+              />
+            </Grid>
+          </Grid>
+          <Grid item xs={12}>
+            <Grid
+              item
+              xs={12}
+              md={4}
+              sx={{
+                display: "flex",
+              }}
+            >
+              <EngravingPicker
+                type={EngravingPickerType.Curse}
+                label={"Curse"}
+                value={accessory.engraving3.name}
+                onChange={handleEngravingChange(accessory.engraving3)}
+              />
+              <PointsPicker
+                label="Points"
+                options={POINTS_ACC3}
+                value={accessory.engraving3.value}
+                onChange={handleEngravingValueChange(accessory.engraving3)}
+              />
+            </Grid>
+          </Grid>
+          <Grid item xs={12} sx={{ display: "flex" }}>
+            <CheckboxField
+              label="Equipped"
+              checked={accessory.equipped}
+              onChange={handleEquippedChange}
+            />
+            <StatInput
+              label="Price"
+              value={accessory.price}
+              onChange={handlePriceChange(accessory)}
+            />
+            <Button onClick={handleRemove}>Remove</Button>
+          </Grid>
+        </Grid>
       </Paper>
     );
   }

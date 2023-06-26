@@ -13,7 +13,6 @@ import { BATTLE_ENGRAVINGS, CURSES, ENGRAVINGS, SLOTS, STATS } from "../data";
 
 export const EngravingFormControl = styled(FormControl)(({ theme }) => ({
   margin: theme.spacing(1),
-  minWidth: 200,
 }));
 
 export enum EngravingPickerType {
@@ -33,7 +32,7 @@ export const EngravingPicker = ({
   value?: string;
   onChange: (value: string | null) => void;
 }) => (
-  <EngravingFormControl>
+  <EngravingFormControl sx={{ flex: 1 }}>
     <Autocomplete
       size="small"
       options={
@@ -88,7 +87,7 @@ export const SlotPicker = ({
   value?: string;
   onChange: (value: string) => void;
 }) => (
-  <EngravingFormControl>
+  <EngravingFormControl sx={{ flex: 1 }}>
     <InputLabel>{label}</InputLabel>
     <Select
       label={label}
@@ -115,7 +114,7 @@ export const StatPicker = ({
   value?: string;
   onChange: (value: string) => void;
 }) => (
-  <EngravingFormControl>
+  <EngravingFormControl sx={{ flex: 1 }}>
     <InputLabel>{label}</InputLabel>
     <Select
       label={label}
@@ -143,7 +142,14 @@ export const StatInput = ({
   value?: number;
   onChange: (value: number | null) => void;
 }) => (
-  <EngravingFormControl>
+  <EngravingFormControl
+    sx={{
+      width: {
+        xs: 120,
+        md: "unset",
+      },
+    }}
+  >
     <TextField
       label={label}
       type="number"

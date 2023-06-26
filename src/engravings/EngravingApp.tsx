@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { EngravingCalculator } from "../models";
 import { EngravingForm } from "./EngravingForm";
 import { EngravingMenu } from "./EngravingMenu";
+import { Box } from "@mui/material";
 
 const store = new EngravingCalculator();
 (window as any).store = store; // debug
@@ -33,6 +34,7 @@ export const EngravingApp = () => {
     <>
       <EngravingForm store={store} />
       <EngravingMenu store={store} />
+      <Box sx={{ marginBottom: 4 }} />
     </>
   );
 };

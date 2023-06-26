@@ -81,6 +81,9 @@ export class EngravingCalculator {
     if (observable) {
       makeAutoObservable(this);
       autorun(() => {
+        if (this.startingNeeds.length === 0) {
+          return;
+        }
         const cacheKey = {
           startingNeeds: this.startingNeeds,
           accessories: this.equippedAccessories,
@@ -88,23 +91,25 @@ export class EngravingCalculator {
           firstOnly: false,
         };
         const cachedResult = this.recommendationCache.get(cacheKey);
-        if (cachedResult) {
-          this.recommendationsRequest.result = cachedResult;
-        } else if (
-          !this.recommendationCache.equals(
-            cacheKey,
-            this.recommendationsRequest.cacheKey
-          )
-        ) {
-          this.recommendationsRequest.requestId = getRecommendations(
-            this.workers,
-            this.startingNeeds,
-            this.equippedAccessories,
-            this.includeAncient
-          );
-          this.recommendationsRequest.cacheKey = cacheKey;
-          this.recommendationsRequest.result = undefined;
-        }
+        runInAction(() => {
+          if (cachedResult) {
+            this.recommendationsRequest.result = cachedResult;
+          } else if (
+            !this.recommendationCache.equals(
+              cacheKey,
+              this.recommendationsRequest.cacheKey
+            )
+          ) {
+            this.recommendationsRequest.requestId = getRecommendations(
+              this.workers,
+              this.startingNeeds,
+              this.equippedAccessories,
+              this.includeAncient
+            );
+            this.recommendationsRequest.cacheKey = cacheKey;
+            this.recommendationsRequest.result = undefined;
+          }
+        });
       });
       reaction(
         () => this.saveData,

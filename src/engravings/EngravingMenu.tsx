@@ -34,10 +34,27 @@ export const EngravingMenu = observer(
           sx={{
             position: "fixed",
             display: "flex",
-            flexDirection: "column",
+            flexDirection: {
+              xs: "row",
+              md: "column",
+            },
             gap: 1,
-            top: 16,
-            left: 16,
+            top: {
+              xs: "unset",
+              md: 16,
+            },
+            left: {
+              xs: "unset",
+              md: 16,
+            },
+            bottom: {
+              xs: 16,
+              md: "unset",
+            },
+            right: {
+              xs: 16,
+              md: "unset",
+            },
           }}
         >
           <Fab onClick={() => setSaveDialogOpen(true)}>Save</Fab>
