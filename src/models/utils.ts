@@ -1,4 +1,10 @@
-import { Engraving, isEngraving, isStat, PartialAccessory, StatValue } from ".";
+import {
+  Engraving,
+  isEngraving,
+  isStat,
+  PartialAccessory,
+  StatValue,
+} from "@/models";
 
 const keyCache: { obj: WeakRef<object>; key: string }[] = [];
 

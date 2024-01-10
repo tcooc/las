@@ -1,13 +1,13 @@
 import { Typography, Button, Grid, FormControl } from "@mui/material";
-import { POINTS_EQUIP, LEVELS, MAX_ENGRAVINGS, POINTS_STONE } from "../data";
+import { POINTS_EQUIP, LEVELS, MAX_ENGRAVINGS, POINTS_STONE } from "@/data";
 import { observer } from "mobx-react-lite";
 import {
   CheckboxField,
   EngravingPicker,
   EngravingPickerType,
   PointsPicker,
-} from "./fields";
-import { EngravingCalculator, Engraving, getKey } from "../models";
+} from "@/engravings/fields";
+import { EngravingCalculator, Engraving, getKey } from "@/models";
 
 export const Setup = observer(({ store }: { store: EngravingCalculator }) => {
   const handleEngravingChange =

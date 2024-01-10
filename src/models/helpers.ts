@@ -8,16 +8,16 @@ import {
   CLASS_ENGRAVINGS,
   CURSES,
   MAX_POINTS_STONE,
-} from "../data";
-import { EngravingCalculator } from "./EngravingCalculator";
-import { AccessorySlot, PartialAccessory } from "./accessory";
-import { Engraving } from "./engravings";
+} from "@/data";
+import { EngravingCalculator } from "@/models/EngravingCalculator";
+import { AccessorySlot, PartialAccessory } from "@/models/accessory";
+import { Engraving } from "@/models/engravings";
 import {
   diffEngravings,
   accessoriesToEngravings,
   sumEngravings,
   sumStats,
-} from "./utils";
+} from "@/models/utils";
 
 export const getPossibleStones = (
   workers: Worker[],

@@ -1,4 +1,4 @@
-import { AccessorySlot, Stat } from "../models";
+import { AccessorySlot, Stat } from "@/models";
 
 export const CLASS_ENGRAVINGS = [
   "Grace of the Empress",
@@ -45,6 +45,10 @@ export const CLASS_ENGRAVINGS = [
   "Recurrence",
   "Predator",
   "Punisher",
+  "Drizzle",
+  "Wind Fury",
+  "Full Moon Harvester",
+  "Night's Edge",
 ];
 
 export const BATTLE_ENGRAVINGS = [

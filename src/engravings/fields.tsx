@@ -9,7 +9,7 @@ import {
   Checkbox,
   FormControlLabel,
 } from "@mui/material";
-import { BATTLE_ENGRAVINGS, CURSES, ENGRAVINGS, SLOTS, STATS } from "../data";
+import { BATTLE_ENGRAVINGS, CURSES, ENGRAVINGS, SLOTS, STATS } from "@/data";
 
 export const EngravingFormControl = styled(FormControl)(({ theme }) => ({
   margin: theme.spacing(1),

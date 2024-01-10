@@ -8,8 +8,8 @@ import {
 } from "@mui/material";
 import { observer } from "mobx-react-lite";
 import { ChangeEvent, useState } from "react";
-import { EngravingCalculator, Stat } from "../models";
-import { SaveDialog } from "./SaveDialog";
+import { EngravingCalculator, Stat } from "@/models";
+import { SaveDialog } from "@/engravings/SaveDialog";
 
 export const EngravingMenu = observer(
   ({ store }: { store: EngravingCalculator }) => {

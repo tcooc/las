@@ -1,4 +1,4 @@
-import { Engraving } from "./engravings";
+import { Engraving } from "@/models/engravings";
 
 export enum Stat {
   Crit = "Crit",

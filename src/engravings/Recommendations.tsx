@@ -1,13 +1,13 @@
 import { Typography, List, ListItem, Button, Tooltip } from "@mui/material";
 import { observer } from "mobx-react-lite";
-import { CLASS_ENGRAVINGS } from "../data";
+import { CLASS_ENGRAVINGS } from "@/data";
 import {
   accessoriesToEngravings,
   AccessorySlot,
   EngravingCalculator,
   engravingsToString,
   sumEngravings,
-} from "../models";
+} from "@/models";
 
 export const Recommendations = observer(
   ({ store }: { store: EngravingCalculator }) => {

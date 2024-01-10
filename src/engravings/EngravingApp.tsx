@@ -1,11 +1,13 @@
 import { useEffect } from "react";
-import { EngravingCalculator } from "../models";
-import { EngravingForm } from "./EngravingForm";
-import { EngravingMenu } from "./EngravingMenu";
+import { EngravingCalculator } from "@/models";
+import { EngravingForm } from "@/engravings/EngravingForm";
+import { EngravingMenu } from "@/engravings/EngravingMenu";
 import { Box } from "@mui/material";
 
 const store = new EngravingCalculator();
-(window as any).store = store; // debug
+try {
+  (window as any).store = store; // debug
+} catch (e) {}
 
 const createWorker = () => {
   const worker = new Worker(
@@ -14,9 +16,13 @@ const createWorker = () => {
   return worker;
 };
 
-store.registerWorker(createWorker());
-
 export const EngravingApp = () => {
+  useEffect(() => {
+    const worker = createWorker();
+    store.registerWorker(worker);
+    return () => worker.terminate();
+  }, []);
+
   useEffect(() => {
     const saveData = store.load();
     if (saveData) {

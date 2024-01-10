@@ -1,11 +1,11 @@
 import { Typography, Button, Paper, Grid } from "@mui/material";
-import { POINTS_ACC1, POINTS_ACC2, POINTS_ACC3 } from "../data";
+import { POINTS_ACC1, POINTS_ACC2, POINTS_ACC3 } from "@/data";
 import {
   Engraving,
   PartialAccessory,
   StatValue,
   EngravingCalculator,
-} from "../models";
+} from "@/models";
 import { observer } from "mobx-react-lite";
 import {
   SlotPicker,
@@ -15,7 +15,7 @@ import {
   PointsPicker,
   EngravingPickerType,
   CheckboxField,
-} from "./fields";
+} from "@/engravings/fields";
 
 export interface AccessoryProps {
   index: number;

@@ -1,8 +1,8 @@
 import { Typography, Button, List, Grid, ListItem, Box } from "@mui/material";
-import { EngravingCalculator, engravingsToString, getKey } from "../models";
+import { EngravingCalculator, engravingsToString, getKey } from "@/models";
 import { observer } from "mobx-react-lite";
 import { useState } from "react";
-import { Accessory } from "./Accessory";
+import { Accessory } from "@/engravings/Accessory";
 
 type Build = EngravingCalculator["builds"][number];
 

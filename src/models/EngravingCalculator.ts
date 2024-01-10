@@ -7,9 +7,13 @@ import {
   PartialAccessory,
   Stat,
   StatValue,
-} from ".";
-import { diffEngravings, sumEngravings } from "./utils";
-import { getBuilds, getPossibleStones, getRecommendations } from "./helpers";
+} from "@/models";
+import { diffEngravings, sumEngravings } from "@/models/utils";
+import {
+  getBuilds,
+  getPossibleStones,
+  getRecommendations,
+} from "@/models/helpers";
 
 export const SAVE_KEY = "calculatorSave";
 export const ACCOUNT_STATS_KEY = "accountStats";

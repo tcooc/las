@@ -17,7 +17,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import { EngravingCalculator, SaveData, SAVE_KEY } from "../models";
+import { EngravingCalculator, SaveData, SAVE_KEY } from "@/models";
 
 const SAVE_SLOTS = 5;
 
