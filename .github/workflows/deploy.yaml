@@ -16,7 +16,7 @@ jobs:
 
       - shell: bash
         run: |
-          yarn --frozen-lockfile
+          yarn --immutable
           yarn build
 
       - uses: actions/upload-pages-artifact@v3
