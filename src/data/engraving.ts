@@ -49,6 +49,8 @@ export const CLASS_ENGRAVINGS = [
   "Wind Fury",
   "Full Moon Harvester",
   "Night's Edge",
+  "Asura's Path",
+  "Brawl King Storm",
 ];
 
 export const BATTLE_ENGRAVINGS = [
@@ -57,6 +59,7 @@ export const BATTLE_ENGRAVINGS = [
   "Ambush Master",
   "Awakening",
   "Barricade",
+  "Crisis Evasion",
   "Cursed Doll",
   "Drops of Ether",
   "Ether Predator",
